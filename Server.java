@@ -6,8 +6,8 @@ public class Server extends Thread {
 
     Socket theConnection;
 
-    public jhttp(Socket s) {
-      theConnection = s;
+    public Server(Socket s) {
+        theConnection = s;
     }
 
     public static void main(String[] args) {
@@ -25,18 +25,33 @@ public class Server extends Thread {
         }
 
         try {
+            int index = 0;
             listeningSocket = new ServerSocket(thePort);
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
-                // A new thread is started for each request
-                Server s = new Server(listeningSocket.accept());
-                s.start();
+                Socket sockets[] = new Socket[10];
+                sockets[index++] = listeningSocket.accept();
+                if (index == 4) {
+                    sendMess(sockets);
+                    index++;
+                }
             }
         } catch (IOException e) {
             System.err.println("Server aborted prematurely");
         }
     }
 
-    public void run() {
+    public static void sendMess(Socket[] sockets) {
+        for (int i = 0; i < sockets.length; i++) {
+            try {
+                OutputStream outstream = sockets[i].getOutputStream();
+                PrintWriter out = new PrintWriter(outstream);
+                String toSend = "String to send";
+                out.print(toSend);
+
+            } catch (IOException e) {
+                System.out.println("Error");
+            }
+        }
     }
 }
