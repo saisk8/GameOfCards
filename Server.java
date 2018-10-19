@@ -26,12 +26,13 @@ public class Server extends Thread {
 
         try {
             int index = 0;
+            Socket sockets[] = new Socket[10];
             listeningSocket = new ServerSocket(thePort);
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
-                Socket sockets[] = new Socket[10];
                 sockets[index++] = listeningSocket.accept();
-                if (index == 4) {
+                System.out.println(sockets.length);
+                if (index == 3) {
                     sendMess(sockets);
                     index++;
                 }
@@ -42,15 +43,13 @@ public class Server extends Thread {
     }
 
     public static void sendMess(Socket[] sockets) {
-        for (int i = 0; i < sockets.length; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
-                OutputStream outstream = sockets[i].getOutputStream();
-                PrintWriter out = new PrintWriter(outstream);
-                String toSend = "String to send";
-                out.print(toSend);
-
+                DataOutputStream outToClient = new DataOutputStream(sockets[i].getOutputStream());
+                String toSend = "String to send\n";
+                outToClient.writeBytes(toSend);
             } catch (IOException e) {
-                System.out.println("Error");
+                System.out.println("Error\n");
             }
         }
     }
