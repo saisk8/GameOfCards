@@ -1,4 +1,4 @@
-package GameOfCards.Game;
+package GameOfCards.Game.BluffGame;
 
 import java.io.*;
 import java.io.Serializable;

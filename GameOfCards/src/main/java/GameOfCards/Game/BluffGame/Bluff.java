@@ -1,4 +1,4 @@
-package GameOfCards.Game;
+package GameOfCards.Game.BluffGame;
 
 import java.util.Iterator;
 import java.net.*;
