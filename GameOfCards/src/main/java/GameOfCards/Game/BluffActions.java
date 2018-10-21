@@ -48,10 +48,11 @@ public class BluffActions implements Serializable {
             index -= 1;
             System.out.println("Your selected rank: " + ranks[index]);
             input.close();
-            action += Integer.toString(indices.length) + ranks[index];
+            action += Integer.toString(indices.length) + " " + ranks[index];
         } else if (option == -1) {
             System.out.println("Error: Invalid option");
         }
+        option = -1;
         return;
     }
 

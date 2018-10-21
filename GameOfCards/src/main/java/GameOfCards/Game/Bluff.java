@@ -11,6 +11,7 @@ public class Bluff {
     private final int NUMBER_OF_PLAYERS;
     private Socket[] players;
     private boolean bluffed = false;
+    private String lastAction = "";
     // private Socket delear;
 
     public Bluff(Socket[] players, int NUMBER_OF_PLAYERS) {
@@ -63,24 +64,56 @@ public class Bluff {
             Comms.alertPlayerTurn(players[turn]);
             Comms.sendData(players[turn], playerHand[turn]);
             action = (BluffActions) Comms.receiveData(players[turn]);
-            performAction(players, playerHand, action, turn, prev);
+            // Perform actions
+            int option = action.getOption();
+            switch (option) {
+                case 1:
+                    if (!bluffed) {
+                        Comms.sendAck(players[turn], "Success");
+                        for (int i = 0; i < discardDeck.getSizeOfDeck(); i++) {
+                            playerHand[prev].addCard(discardDeck.dealCard());
+                        }
+                        discardDeck.restoreDeck();
+                        prev = turn;
+                        turn = ((turn - 1) + NUMBER_OF_PLAYERS) % NUMBER_OF_PLAYERS;
+                    } else {
+                        Comms.sendAck(players[turn], "Fail");
+                        for (int i = 0; i < discardDeck.getSizeOfDeck(); i++) {
+                            playerHand[prev].addCard(discardDeck.dealCard());
+                        }
+                        discardDeck.restoreDeck();
+                        turn = prev;
+                    }
+                    break;
+                case 2:
+                    turn += 1;
+                    break;
+                case 3:
+                    boolean bTemp = false;
+                    lastAction = action.lastAction();
+                    String[] strs = lastAction.trim().split("\\s+");
+                    int[] indices = action.getIndices();
+                    for (int i = 0; i < indices.length; i++) {
+                        Card temp = playerHand[turn].removeCard(indices[i]);
+                        if (!temp.getRank().equals(strs[1])) {
+                            bTemp = true;
+                        }
+                        discardDeck.addCard(temp);
+                    }
+                    bluffed = bTemp;
+                    prev = turn;
+                    turn = (turn + 1) % NUMBER_OF_PLAYERS;
+            }
             NO_WINNER = checkWinner();
-            prev = turn;
-            turn = (turn + 1) % NUMBER_OF_PLAYERS;
+            // prev = turn;
+            // turn = (turn + 1) % NUMBER_OF_PLAYERS;
         }
         Comms.declareWinner(players, turn);
     }
 
     public void performAction(Socket[] players, BluffHand[] hands, BluffActions action, int curr,
             int prev) {
-        int option = action.getOption();
-        switch (option) {
-            case 1:
-                if (bluffed) {
-                    Comms.sendAck(players[turn], "Success");
 
-                }
-        }
     }
 
 }
