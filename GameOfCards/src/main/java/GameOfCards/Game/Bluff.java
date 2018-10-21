@@ -10,6 +10,7 @@ public class Bluff {
     private final int INITIAL_SIZE_OF_HAND = 8;
     private final int NUMBER_OF_PLAYERS;
     private Socket[] players;
+    private boolean bluffed = false;
     // private Socket delear;
 
     public Bluff(Socket[] players, int NUMBER_OF_PLAYERS) {
@@ -44,6 +45,7 @@ public class Bluff {
         }
         cardDeck.shuffle();
         // set up the initial hand
+        // Change this....
         for (int j = 0; j < INITIAL_SIZE_OF_HAND; j++) {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
                 Card drawnCard = cardDeck.dealCard();
@@ -54,18 +56,31 @@ public class Bluff {
 
     public void startGame() {
         boolean NO_WINNER = true;
-        int turn = 0;
+        int turn = 0, prev = -1;
         BluffActions action = new BluffActions();
         while (NO_WINNER) {
             // Happenings of a single turn until, one of the player emerges as the winner
-            turn = (turn + 1) % NUMBER_OF_PLAYERS;
             Comms.alertPlayerTurn(players[turn]);
             Comms.sendData(players[turn], playerHand[turn]);
             action = (BluffActions) Comms.receiveData(players[turn]);
-            performAction();
-            checkWinner();
+            performAction(players, playerHand, action, turn, prev);
+            NO_WINNER = checkWinner();
+            prev = turn;
+            turn = (turn + 1) % NUMBER_OF_PLAYERS;
         }
         Comms.declareWinner(players, turn);
+    }
+
+    public void performAction(Socket[] players, BluffHand[] hands, BluffActions action, int curr,
+            int prev) {
+        int option = action.getOption();
+        switch (option) {
+            case 1:
+                if (bluffed) {
+                    Comms.sendAck(players[turn], "Success");
+
+                }
+        }
     }
 
 }
