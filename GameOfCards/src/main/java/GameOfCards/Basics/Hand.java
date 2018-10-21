@@ -126,16 +126,6 @@ public abstract class Hand implements Comparable {
         return evaluateHand() - otherHand.evaluateHand();
     }
 
-
-    /**
-     * Evaluates the hand. Must be defined in the subclass that implements the hand for the game
-     * being written by the client programmer.
-     * 
-     * @return an integer corresponding to the rating of the hand.
-     */
-    public abstract int evaluateHand();
-
-
     /**
      * Returns a description of the hand.
      * 
