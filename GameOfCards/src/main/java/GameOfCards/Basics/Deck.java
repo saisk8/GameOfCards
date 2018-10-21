@@ -84,6 +84,7 @@ public class Deck {
      * Restores the deck to "full deck" status.
      */
     public void restoreDeck() {
+        deck = new ArrayList();
         index = 0;
     }
 
