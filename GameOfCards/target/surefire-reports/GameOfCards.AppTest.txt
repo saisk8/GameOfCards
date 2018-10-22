@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: GameOfCards.AppTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s - in GameOfCards.AppTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s - in GameOfCards.AppTest
