@@ -2,56 +2,66 @@ package GameOfCards.Game.SaatPeSaatGame;
 
 import java.io.*;
 import java.net.Socket;
-import GameOfCards.Basics.*;
 
 public class SaatPeSaatClient {
     Socket player;
+    String response;
+    int action;
 
     public SaatPeSaatClient(Socket player) {
         this.player = player;
     }
 
     public void playGame() {
-        SaatHand hand = null;
+        System.out.println(1);
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         ObjectInputStream inStream = null;
-        ObjectOutputStream outStream = null;
+        DataOutputStream outStream = null;
         try {
-            outStream = new ObjectOutputStream(player.getOutputStream());
+            System.out.println(3);
+            outStream = new DataOutputStream(player.getOutputStream());
             inStream = new ObjectInputStream(player.getInputStream());
-
         } catch (IOException io) {
             System.out.println("Error...");
         }
-        do {
+        System.out.println(2);
+        while (true) {
             System.out.println("Wait for turn...");
             try {
-
-                hand = (SaatHand) inStream.readObject();
+                response = (String) inStream.readObject();
+                System.out.println(response);
             } catch (IOException io) {
                 io.printStackTrace();
-                System.out.println("Comms Receive error: IO");
             } catch (ClassNotFoundException cnf) {
-                System.out.println("Comms Receive error: Class not found");
+                cnf.printStackTrace();
             }
-            System.out.println("Your turn..." + hand.TURN);
-            if (hand != null) {
-                System.out.println("Heer");
-                System.out.println("Your hand: " + hand);
-                System.out.println("Card on top: " + hand.getCardOnTop());
-                hand.setAction();
+            // System.out.println("Play");
+            if (response.endsWith("Select an option: ")) {
                 try {
-                    outStream.writeObject(hand);
+                    action = Integer.parseInt(input.readLine()) - 1;
+                    System.out.println(action);
+                    outStream.writeInt(action);
+                    Thread.sleep(1000);
                 } catch (IOException io) {
                     io.printStackTrace();
-                    System.out.println("Comms Send error: IO");
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
                 }
-                hand.TURN = false;
+            } else if (response.endsWith("...")) {
+                action = -1;
+                try {
+                    outStream.writeInt(action);
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+            } else {
+                break;
             }
-        } while (hand != null && hand.isGameRunning());
-        if (hand.isWinner()) {
-            System.out.println("You Win!");
-        } else {
-            System.out.println("You lose!");
+        }
+        try {
+            input.close();
+        } catch (IOException io) {
+            io.printStackTrace();
         }
     }
 }
