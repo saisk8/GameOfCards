@@ -4,11 +4,12 @@ import java.net.Socket;
 import java.util.Iterator;
 import GameOfCards.Basics.*;
 import java.io.*;
+import java.util.List;
 
 public class SaatPeSaat {
     private Deck cardDeck;
     private SaatHand[] playerHands;
-    private SaatHand action;
+    private int action;
     private final int NUMBER_OF_PLAYERS;
     private Socket[] players;
     private int firstPlayer = -1;
@@ -51,16 +52,14 @@ public class SaatPeSaat {
 
     public void startGame() {
         boolean NO_WINNER = true;
+        int count = 0;
         int turn = (firstPlayer + 1) % NUMBER_OF_PLAYERS;
         playerHands[turn].setCardOnTop(hearts7);
-        playerHands[turn].setGameStatus(true);
-        playerHands[turn].setWinner(false);
-        playerHands[turn].TURN = true;
+        DataInputStream[] inStream = new DataInputStream[NUMBER_OF_PLAYERS];
         ObjectOutputStream[] outStream = new ObjectOutputStream[NUMBER_OF_PLAYERS];
-        ObjectInputStream[] inStream = new ObjectInputStream[NUMBER_OF_PLAYERS];
         try {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-                inStream[i] = new ObjectInputStream(players[i].getInputStream());
+                inStream[i] = new DataInputStream(players[i].getInputStream());
                 outStream[i] = new ObjectOutputStream(players[i].getOutputStream());
             }
         } catch (IOException io) {
@@ -68,54 +67,91 @@ public class SaatPeSaat {
         }
         System.out.println(turn);
         while (NO_WINNER) {
-            try {
-                outStream[turn].writeObject(playerHands[turn]);
-            } catch (IOException io) {
-                io.printStackTrace();
-                System.out.println("Send error: IO");
+            count++;
+            String actionStr = "Your turn...\n" + "Your Hand: " + playerHands[turn] + "\n"
+                    + "Card on top: " + playerHands[turn].getCardOnTop() + "\n";
+            List<Integer> options = playerHands[turn].evaluateOptions();
+            if (options.size() == 0) {
+                actionStr += ("No possible plays...");
+            } else {
+                actionStr += "Possible plays: " + options.toString() + "\n";
+                actionStr += "Select an option: ";
             }
-            action = new SaatHand();
-            // action = (SaatHand) Comms.receiveData(players[turn]);
             try {
-                action = (SaatHand) inStream[turn].readObject();
+                outStream[turn].writeObject(actionStr);
             } catch (IOException io) {
                 io.printStackTrace();
-                System.out.println("Comms Receive error: IO");
-            } catch (ClassNotFoundException cnf) {
-                System.out.println("Comms Receive error: Class not found");
+            }
+
+            try {
+                action = inStream[turn].readInt();
+            } catch (IOException io) {
+                io.printStackTrace();
             }
             int next = (turn + 1) % NUMBER_OF_PLAYERS;
-            if (action.getAction() == -1) {
+            if (action == -1) {
                 System.out.println("Here1");
-                playerHands[next].setGameStatus(NO_WINNER);
                 playerHands[next].setCardOnTop(playerHands[turn].getCardOnTop());
-                playerHands[next].TURN = true;
                 turn = next;
+                if (count > 3 && checkLoop()) {
+                    System.out.println("Infinite loop");
+                    declareWinner(outStream, turn);
+                }
                 continue;
+            } else if (action == -2) {
+                System.out.println("An unknown error occured...");
+                return;
             }
             NO_WINNER = !playerHands[turn].isEmpty();
             if (NO_WINNER) {
-                System.out.println(turn + " " + next);
-                playerHands[next].setGameStatus(NO_WINNER);
-                playerHands[next].setCardOnTop(playerHands[turn].removeCard(action.getAction()));
-                playerHands[next].TURN = true;
+                System.out.println(turn + " " + next + " " + action);
+                playerHands[next].setCardOnTop(playerHands[turn].removeCard(action));
             }
             turn = next;
         }
-        declareWinner(players, turn);
+
+        declareWinner(outStream, turn);
     }
 
-    public void declareWinner(Socket[] players, int turn) {
+    public void declareWinner(ObjectOutputStream[] outds, int turn) {
+        if (checkLoop()) {
+            int index = turn;
+            try {
+                outds[turn].writeBytes("You Lose!\n\n");
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+            do {
+                index = (index + 1) % NUMBER_OF_PLAYERS;
+                try {
+                    outds[turn].writeBytes("You Lose!\n\n");
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+            } while (index != turn);
+        }
         int index = turn;
-        playerHands[index].setGameStatus(false);
-        playerHands[index].setWinner(true);
-        Comms.sendData(players[index], playerHands[index]);
+        try {
+            outds[turn].writeBytes("You Win!\n\n");
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
         do {
             index = (index + 1) % NUMBER_OF_PLAYERS;
-            playerHands[turn].setGameStatus(false);
-            playerHands[turn].setWinner(false);
-            Comms.sendData(players[index], playerHands[index]);
+            try {
+                outds[turn].writeBytes("You Lose!\n\n");
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
         } while (index != turn);
     }
 
+    public boolean checkLoop() {
+        for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+            if (!playerHands[i].evaluateOptions().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
