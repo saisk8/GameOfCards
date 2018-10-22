@@ -95,7 +95,7 @@ public class SaatPeSaat {
                 turn = next;
                 if (count > 3 && checkLoop()) {
                     System.out.println("Infinite loop");
-                    declareWinner(outStream, turn);
+                    NO_WINNER = false;
                 }
                 continue;
             } else if (action == -2) {
@@ -111,20 +111,23 @@ public class SaatPeSaat {
         }
 
         declareWinner(outStream, turn);
+        System.out.println("Game ended!");
     }
 
     public void declareWinner(ObjectOutputStream[] outds, int turn) {
         if (checkLoop()) {
             int index = turn;
             try {
-                outds[turn].writeBytes("You Lose!\n\n");
+                outds[turn].writeObject("You Lose!\n\n");
+                outds[turn].close();
             } catch (IOException io) {
                 io.printStackTrace();
             }
             do {
                 index = (index + 1) % NUMBER_OF_PLAYERS;
                 try {
-                    outds[turn].writeBytes("You Lose!\n\n");
+                    outds[turn].writeObject("You Lose!\n\n");
+                    outds[turn].close();
                 } catch (IOException io) {
                     io.printStackTrace();
                 }
@@ -132,14 +135,16 @@ public class SaatPeSaat {
         }
         int index = turn;
         try {
-            outds[turn].writeBytes("You Win!\n\n");
+            outds[turn].writeObject("You Win!\n\n");
+            outds[turn].close();
         } catch (IOException io) {
             io.printStackTrace();
         }
         do {
             index = (index + 1) % NUMBER_OF_PLAYERS;
             try {
-                outds[turn].writeBytes("You Lose!\n\n");
+                outds[turn].writeObject("You Lose!\n\n");
+                outds[turn].close();
             } catch (IOException io) {
                 io.printStackTrace();
             }
