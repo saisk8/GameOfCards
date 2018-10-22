@@ -55,6 +55,11 @@ public class SaatPeSaatClient {
                     io.printStackTrace();
                 }
             } else {
+                try {
+                    player.close();
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
                 break;
             }
         }
