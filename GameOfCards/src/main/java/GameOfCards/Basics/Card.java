@@ -1,12 +1,14 @@
 package GameOfCards.Basics;
 
+import java.io.Serializable;
+
 /*
  * Representation of a single playing card. A card consists of a suit value (e.g. hearts, spades), a
  * rank value (e.g. ace, 7, king), A card object is immutable; once instantiated, the values cannot
  * change.
  */
-public class Card implements Comparable {
-
+public class Card implements Comparable, Serializable {
+    private final static long serialVersionUID = 1;
     // instance variables for the card
     private Suit suitValue;
     private Rank rankValue;

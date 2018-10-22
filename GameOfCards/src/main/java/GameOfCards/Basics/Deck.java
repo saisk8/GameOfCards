@@ -1,10 +1,12 @@
 package GameOfCards.Basics;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Deck {
+public class Deck implements Serializable {
     private java.util.List deck;
     private int index;
+    private final static long serialVersionUID = 1;
 
 
     /**

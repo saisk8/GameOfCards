@@ -1,8 +1,10 @@
 package GameOfCards.Basics;
 
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class Hand implements Comparable {
+public abstract class Hand implements Serializable {
+    private final static long serialVersionUID = 1;
 
     private java.util.List hand = new ArrayList();
 
@@ -121,10 +123,10 @@ public abstract class Hand implements Comparable {
      * @return < 0 if this hand is less than the other hand, 0 if the two hands are the same, or > 0
      *         if this hand is greater then the other hand.
      */
-    public int compareTo(Object otherHandObject) {
-        Hand otherHand = (Hand) otherHandObject;
-        return evaluateHand() - otherHand.evaluateHand();
-    }
+    // public int compareTo(Object otherHandObject) {
+    // Hand otherHand = (Hand) otherHandObject;
+    // return evaluateHand() - otherHand.evaluateHand();
+    // }
 
     /**
      * Returns a description of the hand.

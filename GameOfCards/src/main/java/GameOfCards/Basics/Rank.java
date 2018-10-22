@@ -1,5 +1,6 @@
 package GameOfCards.Basics;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -15,10 +16,11 @@ import java.util.*;
  * Class can be extended for implementation of speciality decks containing a subset of the standard
  * ranks, e.g. pinochle.
  */
-public class Rank implements Comparable {
+public class Rank implements Comparable, Serializable {
     private String name;
     private String symbol;
     private static boolean aceHigh = false;
+    private final static long serialVersionUID = 1;
 
     /**
      * The rank ace.

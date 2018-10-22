@@ -12,6 +12,7 @@ public class SaatHand extends Hand implements Serializable {
     private boolean gameStatus;
     private boolean winner;
     private int action;
+    public boolean TURN = false;
 
     public SaatHand() {
         super();
@@ -31,12 +32,12 @@ public class SaatHand extends Hand implements Serializable {
         List<Integer> possible = new ArrayList<Integer>();
         for (int i = 0; i < getNumberOfCards(); i++) {
             if (rankValue.getName().equals(getCard(i).getRank().getName())) {
-                possible.add(i);
+                possible.add(i + 1);
                 continue;
             } else if (suitValue.getName().equals(getCard(i).getSuit().getName())) {
                 if (rankValue.compareTo(getCard(i).getRank()) == -1
                         || rankValue.compareTo(getCard(i).getRank()) == 1) {
-                    possible.add(i);
+                    possible.add(i + 1);
                     continue;
                 }
             }
@@ -71,10 +72,11 @@ public class SaatHand extends Hand implements Serializable {
         System.out.println("Possible plays: " + opt.toString());
         System.out.print("Select an option: ");
         Scanner input = new Scanner(System.in);
-        action = input.nextInt();
+        if (input.hasNext())
+            action = input.nextInt() - 1;
         input.close();
         if (opt.indexOf(action) < 0)
-            action = opt.get(0);
+            action = opt.get(0) - 1;
     }
 
     public int getAction() {

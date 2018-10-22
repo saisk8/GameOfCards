@@ -3,6 +3,7 @@ package GameOfCards.Game.SaatPeSaatGame;
 import java.net.Socket;
 import java.util.Iterator;
 import GameOfCards.Basics.*;
+import java.io.*;
 
 public class SaatPeSaat {
     private Deck cardDeck;
@@ -33,6 +34,7 @@ public class SaatPeSaat {
         }
         cardDeck.shuffle();
         // set up the initial hand
+        playerHands = new SaatHand[NUMBER_OF_PLAYERS];
         for (int i = 0; i < playerHands.length; i++) {
             playerHands[i] = new SaatHand();
         }
@@ -53,21 +55,50 @@ public class SaatPeSaat {
         playerHands[turn].setCardOnTop(hearts7);
         playerHands[turn].setGameStatus(true);
         playerHands[turn].setWinner(false);
+        playerHands[turn].TURN = true;
+        ObjectOutputStream[] outStream = new ObjectOutputStream[NUMBER_OF_PLAYERS];
+        ObjectInputStream[] inStream = new ObjectInputStream[NUMBER_OF_PLAYERS];
+        try {
+            for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+                inStream[i] = new ObjectInputStream(players[i].getInputStream());
+                outStream[i] = new ObjectOutputStream(players[i].getOutputStream());
+            }
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+        System.out.println(turn);
         while (NO_WINNER) {
-            // Happenings of a single turn until, one of the player emerges as the winner
-            Comms.alertPlayerTurn(players[turn]);
-            Comms.sendData(players[turn], playerHands[turn]);
-            action = (SaatHand) Comms.receiveData(players[turn]);
+            try {
+                outStream[turn].writeObject(playerHands[turn]);
+            } catch (IOException io) {
+                io.printStackTrace();
+                System.out.println("Send error: IO");
+            }
+            action = new SaatHand();
+            // action = (SaatHand) Comms.receiveData(players[turn]);
+            try {
+                action = (SaatHand) inStream[turn].readObject();
+            } catch (IOException io) {
+                io.printStackTrace();
+                System.out.println("Comms Receive error: IO");
+            } catch (ClassNotFoundException cnf) {
+                System.out.println("Comms Receive error: Class not found");
+            }
             int next = (turn + 1) % NUMBER_OF_PLAYERS;
             if (action.getAction() == -1) {
+                System.out.println("Here1");
+                playerHands[next].setGameStatus(NO_WINNER);
+                playerHands[next].setCardOnTop(playerHands[turn].getCardOnTop());
+                playerHands[next].TURN = true;
                 turn = next;
                 continue;
             }
             NO_WINNER = !playerHands[turn].isEmpty();
             if (NO_WINNER) {
+                System.out.println(turn + " " + next);
                 playerHands[next].setGameStatus(NO_WINNER);
                 playerHands[next].setCardOnTop(playerHands[turn].removeCard(action.getAction()));
-                break;
+                playerHands[next].TURN = true;
             }
             turn = next;
         }
@@ -77,7 +108,7 @@ public class SaatPeSaat {
     public void declareWinner(Socket[] players, int turn) {
         int index = turn;
         playerHands[index].setGameStatus(false);
-        playerHands[index].setWinner(false);
+        playerHands[index].setWinner(true);
         Comms.sendData(players[index], playerHands[index]);
         do {
             index = (index + 1) % NUMBER_OF_PLAYERS;

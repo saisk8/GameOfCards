@@ -5,9 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 
-public class Comms {
+public class Comms implements Serializable {
+    private final static long serialVersionUID = 1;
+
     public static void sendData(Socket soc, Object data) {
         try {
             ObjectOutputStream outStream = new ObjectOutputStream(soc.getOutputStream());

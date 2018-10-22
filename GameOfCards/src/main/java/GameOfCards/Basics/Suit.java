@@ -1,13 +1,15 @@
 package GameOfCards.Basics;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Specification of the suit values for a standard deck of cards.
  */
-public final class Suit implements Comparable {
+public final class Suit implements Comparable, Serializable {
     private String name;
     private String symbol;
+    private final static long serialVersionUID = 1;
 
     /**
      * The suit clubs.

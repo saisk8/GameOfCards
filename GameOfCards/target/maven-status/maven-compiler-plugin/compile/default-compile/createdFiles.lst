@@ -1,0 +1,12 @@
+GameOfCards/Basics/Hand.class
+GameOfCards/Game/SaatPeSaatGame/SaatPeSaatClient.class
+GameOfCards/Game/SaatPeSaatGame/SaatPeSaat.class
+GameOfCards/Basics/Suit.class
+GameOfCards/Game/SaatPeSaatGame/SaatHand.class
+GameOfCards/App.class
+GameOfCards/ServerStub.class
+GameOfCards/Basics/Comms.class
+GameOfCards/ClientStub.class
+GameOfCards/Basics/Rank.class
+GameOfCards/Basics/Card.class
+GameOfCards/Basics/Deck.class
