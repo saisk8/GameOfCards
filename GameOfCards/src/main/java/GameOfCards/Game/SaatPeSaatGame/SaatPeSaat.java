@@ -77,17 +77,8 @@ public class SaatPeSaat {
                 actionStr += "Possible plays: " + options.toString() + "\n";
                 actionStr += "Select an option: ";
             }
-            try {
-                outStream[turn].writeObject(actionStr);
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
-
-            try {
-                action = inStream[turn].readInt();
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
+            Comms.sendData(outStream[turn], actionStr);
+            action = Comms.receiveData(inStream[turn]);
             int next = (turn + 1) % NUMBER_OF_PLAYERS;
             if (action == -1) {
                 System.out.println("Here1");
@@ -98,7 +89,7 @@ public class SaatPeSaat {
                     NO_WINNER = false;
                 }
                 continue;
-            } else if (action == -2) {
+            } else if (action <= -2) {
                 System.out.println("An unknown error occured...");
                 return;
             }
@@ -110,40 +101,10 @@ public class SaatPeSaat {
             turn = next;
         }
 
-        declareWinner(outStream, turn);
+        Comms.declareWinner(outStream, turn, checkLoop(), NUMBER_OF_PLAYERS);
         System.out.println("Game ended!");
     }
 
-    public void declareWinner(ObjectOutputStream[] outds, int turn) {
-        int index = turn;
-        if (checkLoop()) {
-            do {
-                try {
-                    outds[index].writeObject("You Lose!\n\n");
-                    outds[index].close();
-                } catch (IOException io) {
-                    io.printStackTrace();
-                }
-                index = (index + 1) % NUMBER_OF_PLAYERS;
-            } while (index != turn);
-            return;
-        }
-        try {
-            outds[index].writeObject("You Win!\n\n");
-            outds[index].close();
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-        do {
-            try {
-                outds[index].writeObject("You Lose!\n\n");
-                outds[index].close();
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
-            index = (index + 1) % NUMBER_OF_PLAYERS;
-        } while (index != turn);
-    }
 
     public boolean checkLoop() {
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
