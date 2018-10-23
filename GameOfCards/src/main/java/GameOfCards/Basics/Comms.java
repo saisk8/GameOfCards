@@ -1,77 +1,78 @@
 package GameOfCards.Basics;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.Socket;
 
 public class Comms implements Serializable {
     private final static long serialVersionUID = 1;
 
-    public static void sendData(Socket soc, Object data) {
+
+    /**
+     * Sends an data of type <code> Object </code> through the output stream
+     */
+    public static void sendData(ObjectOutputStream outStream, Object data) {
         try {
-            ObjectOutputStream outStream = new ObjectOutputStream(soc.getOutputStream());
             outStream.writeObject(data);
         } catch (IOException io) {
-            System.out.println("Comms Send error: IO");
+            io.printStackTrace();
         }
     }
 
-    public static Object receiveData(Socket soc) {
-        Object data = null;
+    /**
+     * Receives data of type <code> int </code> from the DataInputStream.
+     * 
+     * @param inStream A DataInputStream that is wrapped around a TCP socket's InputStream
+     * @return An integer value read from the InputStream
+     */
+    public static int receiveData(DataInputStream inStream) {
+        int data = -3;
         try {
-            ObjectInputStream inStream = new ObjectInputStream(soc.getInputStream());
-            data = inStream.readObject();
+            data = inStream.readInt();
         } catch (IOException io) {
-            System.out.println("Comms Receive error: IO");
-        } catch (ClassNotFoundException cnf) {
-            System.out.println("Comms Receive error: Class not found");
+            io.printStackTrace();
         }
-        if (data != null) {
-            return data;
-        }
-        return null;
+        return data;
     }
 
-    public static void alertPlayerTurn(Socket soc) {
-        // Player's turn
-        int status = 1;
+    /**
+     * Sends to each of the connected clients their winning status respectively.
+     * 
+     * @param outds             An array of ObjectOutputStream
+     * @param turn              The index of the player whose turn it is currently
+     * @param checkLoop         A boolean value to check if all players have lost
+     * @param NUMBER_OF_PLAYERS Number of players, playing the game
+     */
+    public static void declareWinner(ObjectOutputStream[] outds, int turn, boolean checkLoop,
+            int NUMBER_OF_PLAYERS) {
+        int index = turn;
+        if (checkLoop) {
+            do {
+                try {
+                    outds[index].writeObject("You Lose!\n\n");
+                    outds[index].close();
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+                index = (index + 1) % NUMBER_OF_PLAYERS;
+            } while (index != turn);
+            return;
+        }
         try {
-            DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
-            dos.writeInt(status);
+            outds[index].writeObject("You Win!\n\n");
+            outds[index].close();
         } catch (IOException io) {
-            System.out.println("Comms alertPlayerTurn error: io");
+            io.printStackTrace();
         }
-    }
-
-    public static boolean receiveTurnAlert(Socket soc) {
-        int status = 1;
-        try {
-            DataInputStream dis = new DataInputStream(soc.getInputStream());
-            status = dis.readInt();
-        } catch (Exception e) {
-            System.out.println("Comms ReceiveTurnAlert error");
-        }
-        if (status == 0 || status == -1)
-            return false;
-        return true;
-    }
-
-    public static void declareWinner(Socket[] players, int winner) {
-        int status = -1;
-        for (int i = 0; i < players.length; i++) {
-            int v = status;
-            if (i == winner)
-                v = 2;
+        do {
             try {
-                DataOutputStream dos = new DataOutputStream(players[i].getOutputStream());
-                dos.writeInt(v);
+                outds[index].writeObject("You Lose!\n\n");
+                outds[index].close();
             } catch (IOException io) {
-                System.out.println("Comms declareWinner error: io");
+                io.printStackTrace();
             }
-        }
+            index = (index + 1) % NUMBER_OF_PLAYERS;
+        } while (index != turn);
     }
 }
