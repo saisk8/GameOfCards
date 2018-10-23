@@ -115,39 +115,33 @@ public class SaatPeSaat {
     }
 
     public void declareWinner(ObjectOutputStream[] outds, int turn) {
+        int index = turn;
         if (checkLoop()) {
-            int index = turn;
-            try {
-                outds[turn].writeObject("You Lose!\n\n");
-                outds[turn].close();
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
             do {
-                index = (index + 1) % NUMBER_OF_PLAYERS;
                 try {
-                    outds[turn].writeObject("You Lose!\n\n");
-                    outds[turn].close();
+                    outds[index].writeObject("You Lose!\n\n");
+                    outds[index].close();
                 } catch (IOException io) {
                     io.printStackTrace();
                 }
+                index = (index + 1) % NUMBER_OF_PLAYERS;
             } while (index != turn);
+            return;
         }
-        int index = turn;
         try {
-            outds[turn].writeObject("You Win!\n\n");
-            outds[turn].close();
+            outds[index].writeObject("You Win!\n\n");
+            outds[index].close();
         } catch (IOException io) {
             io.printStackTrace();
         }
         do {
-            index = (index + 1) % NUMBER_OF_PLAYERS;
             try {
-                outds[turn].writeObject("You Lose!\n\n");
-                outds[turn].close();
+                outds[index].writeObject("You Lose!\n\n");
+                outds[index].close();
             } catch (IOException io) {
                 io.printStackTrace();
             }
+            index = (index + 1) % NUMBER_OF_PLAYERS;
         } while (index != turn);
     }
 
