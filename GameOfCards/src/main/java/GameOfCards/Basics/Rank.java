@@ -16,7 +16,7 @@ import java.util.*;
  * Class can be extended for implementation of speciality decks containing a subset of the standard
  * ranks, e.g. pinochle.
  */
-public class Rank implements Comparable, Serializable {
+public class Rank implements Comparable<Object>, Serializable {
     private String name;
     private String symbol;
     private static boolean aceHigh = false;
@@ -76,18 +76,19 @@ public class Rank implements Comparable, Serializable {
     public final static Rank KING = new Rank("King", "k");
 
 
-    private final static java.util.List VALUES_KING_HIGH =
+    private final static java.util.List<Rank> VALUES_KING_HIGH =
             Collections.unmodifiableList(Arrays.asList(new Rank[] {ACE, TWO, THREE, FOUR, FIVE, SIX,
                     SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING}));
 
-    private final static java.util.List VALUES_ACE_HIGH =
+    private final static java.util.List<Rank> VALUES_ACE_HIGH =
             Collections.unmodifiableList(Arrays.asList(new Rank[] {TWO, THREE, FOUR, FIVE, SIX,
                     SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE}));
 
     /**
      * List of all rank values. Used primarily for the purpose of iteration.
      */
-    public final static java.util.List VALUES = Collections.unmodifiableList(VALUES_KING_HIGH);
+    public final static java.util.List<Rank> VALUES =
+            Collections.unmodifiableList(VALUES_KING_HIGH);
 
 
     // Constructor - declared private as only the predefined values should

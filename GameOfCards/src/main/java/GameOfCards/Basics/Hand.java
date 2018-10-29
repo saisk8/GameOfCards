@@ -6,7 +6,7 @@ import java.util.*;
 public abstract class Hand implements Serializable {
     private final static long serialVersionUID = 1;
 
-    private java.util.List hand = new ArrayList();
+    private java.util.List<Card> hand = new ArrayList<Card>();
 
 
     /**
@@ -17,7 +17,6 @@ public abstract class Hand implements Serializable {
     public void addCard(Card card) {
         hand.add(card);
     }
-
 
     /**
      * Obtains the card stored at the specified location in the hand. Does not remove the card from

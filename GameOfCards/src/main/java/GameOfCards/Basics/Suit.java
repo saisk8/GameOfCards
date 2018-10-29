@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Specification of the suit values for a standard deck of cards.
  */
-public final class Suit implements Comparable, Serializable {
+public final class Suit implements Comparable<Object>, Serializable {
     private String name;
     private String symbol;
     private final static long serialVersionUID = 1;
@@ -32,7 +32,7 @@ public final class Suit implements Comparable, Serializable {
     /**
      * List of all suit values. Primarily for use with iteration.
      */
-    public final static java.util.List VALUES = Collections
+    public final static java.util.List<Suit> VALUES = Collections
             .unmodifiableList(Arrays.asList(new Suit[] {CLUBS, DIAMONDS, HEARTS, SPADES}));
 
 

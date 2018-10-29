@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Deck implements Serializable {
-    private java.util.List deck;
+    private java.util.List<Card> deck;
     private int index;
     private final static long serialVersionUID = 1;
 
@@ -13,7 +13,7 @@ public class Deck implements Serializable {
      * Creates an empty deck of cards.
      */
     public Deck() {
-        deck = new ArrayList();
+        deck = new ArrayList<Card>();
         index = 0;
     }
 
@@ -86,7 +86,7 @@ public class Deck implements Serializable {
      * Restores the deck to "full deck" status.
      */
     public void restoreDeck() {
-        deck = new ArrayList();
+        deck = new ArrayList<Card>();
         index = 0;
     }
 

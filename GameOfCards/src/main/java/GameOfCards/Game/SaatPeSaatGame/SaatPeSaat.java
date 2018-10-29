@@ -23,10 +23,10 @@ public class SaatPeSaat {
     public void init() {
         // add the Card instantiations here
         cardDeck = new Deck();
-        Iterator suitIterator = Suit.VALUES.iterator();
+        Iterator<Suit> suitIterator = Suit.VALUES.iterator();
         while (suitIterator.hasNext()) {
             Suit suit = (Suit) suitIterator.next();
-            Iterator rankIterator = Rank.VALUES.iterator();
+            Iterator<Rank> rankIterator = Rank.VALUES.iterator();
             while (rankIterator.hasNext()) {
                 Rank rank = (Rank) rankIterator.next();
                 Card card = new Card(suit, rank);

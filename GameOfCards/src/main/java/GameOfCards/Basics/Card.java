@@ -7,7 +7,7 @@ import java.io.Serializable;
  * rank value (e.g. ace, 7, king), A card object is immutable; once instantiated, the values cannot
  * change.
  */
-public class Card implements Comparable, Serializable {
+public class Card implements Comparable<Object>, Serializable {
     private final static long serialVersionUID = 1;
     // instance variables for the card
     private Suit suitValue;
