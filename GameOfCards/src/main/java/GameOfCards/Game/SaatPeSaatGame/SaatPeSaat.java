@@ -55,11 +55,11 @@ public class SaatPeSaat {
         int count = 0;
         int turn = (firstPlayer + 1) % NUMBER_OF_PLAYERS;
         playerHands[turn].setCardOnTop(hearts7);
-        DataInputStream[] inStream = new DataInputStream[NUMBER_OF_PLAYERS];
+        ObjectInputStream[] inStream = new ObjectInputStream[NUMBER_OF_PLAYERS];
         ObjectOutputStream[] outStream = new ObjectOutputStream[NUMBER_OF_PLAYERS];
         try {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-                inStream[i] = new DataInputStream(players[i].getInputStream());
+                inStream[i] = new ObjectInputStream(players[i].getInputStream());
                 outStream[i] = new ObjectOutputStream(players[i].getOutputStream());
             }
         } catch (IOException io) {
@@ -78,7 +78,7 @@ public class SaatPeSaat {
                 actionStr += "Select an option: ";
             }
             Comms.sendData(outStream[turn], actionStr);
-            action = Comms.receiveData(inStream[turn]);
+            action = (Integer) Comms.receiveData(inStream[turn]);
             int next = (turn + 1) % NUMBER_OF_PLAYERS;
             if (action == -1) {
                 System.out.println("Here1");
