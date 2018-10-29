@@ -1,13 +1,32 @@
 package GameOfCards.Basics;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Comms implements Serializable {
     private final static long serialVersionUID = 1;
 
+
+    public static void sendWelcome(Object data, ObjectOutputStream out) {
+        try {
+            out.writeObject(data);
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+    }
+
+    public static Acquaintance receiveHello(ObjectInputStream in) {
+        try {
+            return (Acquaintance) in.readObject();
+        } catch (IOException io) {
+            io.printStackTrace();
+        } catch (ClassNotFoundException cnf) {
+            cnf.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Sends an data of type <code> Object </code> through the output stream
@@ -23,15 +42,17 @@ public class Comms implements Serializable {
     /**
      * Receives data of type <code> int </code> from the DataInputStream.
      * 
-     * @param inStream A DataInputStream that is wrapped around a TCP socket's InputStream
-     * @return An integer value read from the InputStream
+     * @param inStream A ObjectInputStream that is wrapped around a TCP socket's InputStream
+     * @return An Object value read from the InputStream
      */
-    public static int receiveData(DataInputStream inStream) {
-        int data = -3;
+    public static Object receiveData(ObjectInputStream inStream) {
+        Object data = null;
         try {
-            data = inStream.readInt();
+            data = inStream.readObject();
         } catch (IOException io) {
             io.printStackTrace();
+        } catch (ClassNotFoundException cnf) {
+            cnf.printStackTrace();
         }
         return data;
     }
