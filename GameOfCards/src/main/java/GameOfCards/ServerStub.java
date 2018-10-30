@@ -10,6 +10,12 @@ public class ServerStub extends Thread {
     private final static int PORT = 3000;
     static int numberOfGroups = 0;
     static int numberOfPlayersExpected = -1;
+    GameServer game;
+
+    public ServerStub(GameServer game) {
+        this.game = game;
+
+    }
 
     public static void main(String[] args) {
         ServerSocket listeningSocket;
@@ -17,43 +23,53 @@ public class ServerStub extends Thread {
             listeningSocket = new ServerSocket(PORT);
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
+                System.out.println("Again");
                 Socket newClient = listeningSocket.accept();
                 Acquaintance guest =
                         Comms.receiveHello(new ObjectInputStream(newClient.getInputStream()));
                 Acquaintance welcome = greetings(guest);
                 int game = guest.getOption();
-                assignDealer(game, guest);
+                ServerStub stub = assignDealer(game, guest);
+                stub.start();
                 Comms.sendWelcome(welcome, new ObjectOutputStream(newClient.getOutputStream()));
             }
         } catch (IOException e) {
-            System.err.println("Server aborted prematurely");
+            e.printStackTrace();
+            System.err.println("Server aborted prematurely " + PORT);
         }
     }
 
     public static Acquaintance greetings(Acquaintance guest) {
+        numberOfGroups++;
         Acquaintance welcome = new Acquaintance();
         if (guest.isHost()) {
             welcome.setStatus(1);
+            welcome.setGroupId(numberOfGroups);
+            welcome.setOption(guest.getOption());
             return welcome;
         }
         welcome.setStatus(-1);
         return welcome;
     }
 
-    public static void assignDealer(int gameId, Acquaintance guest) {
-        numberOfGroups++;
-        GameServer game = null;
+    public void run() {
+        game.start();
+    }
+
+    public static ServerStub assignDealer(int gameId, Acquaintance guest) {
+        GameServer newGame = null;
+        System.out.println(numberOfGroups);
         switch (gameId) {
             case 1:
-                game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
                 break;
             case 2:
-                game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
                 break;
             default:
-                game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), 1);
+                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), 1);
                 break;
         }
-        game.run();
+        return new ServerStub(newGame);
     }
 }
