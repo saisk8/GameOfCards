@@ -13,18 +13,57 @@ import GameOfCards.Game.SaatPeSaatGame.*;
 
 public class ClientStub {
     public static void main(String argv[]) throws Exception {
-        int groupId = isHost();
-        Acquaintance client = doNeedFull(groupId);
-        Socket player = connect(client);
+        int host = isHost();
+        Acquaintance client = doNeedFull(host);
+        Socket soc = null;
+        Socket player = null;
+        Acquaintance reply = null;
+        if (host == 1) {
+            try {
+                soc = new Socket("localhost", 3000);
+                Comms.sendWelcome(client, new ObjectOutputStream(soc.getOutputStream()));
+                reply = Comms.receiveHello(new ObjectInputStream(soc.getInputStream()));
+                System.out.println(reply.getGroupId());
+                try {
+                    System.out.println(11);
+                    int port = 3000 + reply.getGroupId();
+                    System.out.println("Port: " + port);
+                    player = new Socket("localhost", port);
+                    System.out.println(22);
+                    System.out.println("Connected to new Server at" + player.getPort());
+                    System.out.println("Your group ID = " + (player.getPort() - 3000));
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+            } catch (IOException io) {
+                io.printStackTrace();
+                soc.close();
+                return;
+            }
+            soc.close();
+        } else {
+            System.out.println("Enter your group ID: ");
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                int port = 3000 + Integer.parseInt(input.readLine());
+                System.out.println("Port: " + port);
+                player = new Socket("localhost", port);
+                System.out.println("Connected to new Server at" + player.getPort());
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+        }
         switch (client.getOption()) {
             case 1:
                 SaatPeSaatClient game1 = new SaatPeSaatClient(player);
                 game1.playGame();
+                break;
             case 2:
                 DumbClient game2 = new DumbClient(player);
                 game2.playGame();
+                break;
             default:
-                System.err.println("Some error occured" + client.getOption());
+                System.err.println("Some error occured " + client.getOption());
         }
     }
 
@@ -48,50 +87,28 @@ public class ClientStub {
             System.out.print("Enter your option: ");
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             try {
-                client.setOption(Integer.parseInt(input.readLine()));
-                System.out.println("Enter the number of players: ");
                 int a = Integer.parseInt(input.readLine());
-                System.out.println(a);
-                client.setNumberOfPlayers(a);
+                client.setOption(a);
+                System.out.println("Enter the number of players: ");
+                int b = Integer.parseInt(input.readLine());
+                System.out.println(b);
+                client.setNumberOfPlayers(b);
             } catch (IOException io) {
                 io.printStackTrace();
             }
             client.setHost();
         } else {
-            return client;
-        }
-        return client;
-    }
-
-    public static Socket connect(Acquaintance client) {
-        Acquaintance reply;
-        Socket game = null;
-        if (client.isHost()) {
+            System.out.println("Which game do you want to host? ");
+            System.out.println("1. Saat Pe Saat\n2. Dumb Card Game");
+            System.out.print("Enter your option: ");
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             try {
-                Socket soc = new Socket("localhost", 3000);
-                Comms.sendWelcome(client, new ObjectOutputStream(soc.getOutputStream()));
-                reply = Comms.receiveHello(new ObjectInputStream(soc.getInputStream()));
-                Thread.sleep(300);
-                System.out.println(11);
-                game = new Socket("localhost", 3000 + reply.getGroupId());
-                // soc.close();
-                System.out.println(22);
-                System.out.println("Connected to new Server at" + game.getLocalPort());
-                System.out.println("Your group ID = " + (game.getLocalPort() - 3000));
+                int a = Integer.parseInt(input.readLine());
+                client.setOption(a);
             } catch (IOException io) {
                 io.printStackTrace();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
             }
-            return game;
         }
-        System.out.println("Enter your group ID: ");
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            game = new Socket("localhost", 3000 + (Integer.parseInt(input.readLine())));
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-        return game;
+        return client;
     }
 }
