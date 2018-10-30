@@ -16,10 +16,10 @@ public class SaatPeSaatClient {
         System.out.println(1);
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         ObjectInputStream inStream = null;
-        DataOutputStream outStream = null;
+        ObjectOutputStream outStream = null;
         try {
             System.out.println(3);
-            outStream = new DataOutputStream(player.getOutputStream());
+            outStream = new ObjectOutputStream(player.getOutputStream());
             inStream = new ObjectInputStream(player.getInputStream());
         } catch (IOException io) {
             System.out.println("Error...");
@@ -40,7 +40,7 @@ public class SaatPeSaatClient {
                 try {
                     action = Integer.parseInt(input.readLine()) - 1;
                     System.out.println(action);
-                    outStream.writeInt(action);
+                    outStream.writeObject(action);
                     Thread.sleep(1000);
                 } catch (IOException io) {
                     io.printStackTrace();
@@ -50,7 +50,7 @@ public class SaatPeSaatClient {
             } else if (response.endsWith("...")) {
                 action = -1;
                 try {
-                    outStream.writeInt(action);
+                    outStream.writeObject(action);
                 } catch (IOException io) {
                     io.printStackTrace();
                 }
