@@ -10,7 +10,7 @@ public class DumbGameServer {
     static int numberOfPlayers;
 
     public DumbGameServer(int groupId, int number) {
-        thePort += PORT + groupId;
+        thePort = PORT + groupId;
         numberOfPlayers = number;
     }
 
@@ -31,7 +31,7 @@ public class DumbGameServer {
             sps.init();
             sps.startGame();
         } catch (IOException e) {
-            System.err.println("Server aborted prematurely");
+            System.err.println("Server aborted prematurely " + thePort);
         }
     }
 }
