@@ -21,6 +21,7 @@ public class SaatPeSaat {
     }
 
     public void init() {
+        System.out.println("In Init");
         // add the Card instantiations here
         cardDeck = new Deck();
         Iterator<Suit> suitIterator = Suit.VALUES.iterator();
@@ -51,6 +52,7 @@ public class SaatPeSaat {
     }
 
     public void startGame() {
+        System.out.println("In start");
         boolean NO_WINNER = true;
         int count = 0;
         int turn = (firstPlayer + 1) % NUMBER_OF_PLAYERS;
@@ -59,14 +61,15 @@ public class SaatPeSaat {
         ObjectOutputStream[] outStream = new ObjectOutputStream[NUMBER_OF_PLAYERS];
         try {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-                inStream[i] = new ObjectInputStream(players[i].getInputStream());
+                System.out.print(i);
                 outStream[i] = new ObjectOutputStream(players[i].getOutputStream());
+                inStream[i] = new ObjectInputStream(players[i].getInputStream());
             }
         } catch (IOException io) {
             io.printStackTrace();
         }
-        System.out.println(turn);
         while (NO_WINNER) {
+            System.out.println(turn);
             count++;
             String actionStr = "Your turn...\n" + "Your Hand: " + playerHands[turn] + "\n"
                     + "Card on top: " + playerHands[turn].getCardOnTop() + "\n";
