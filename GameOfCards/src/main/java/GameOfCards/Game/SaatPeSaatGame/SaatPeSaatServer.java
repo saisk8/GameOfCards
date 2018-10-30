@@ -23,6 +23,8 @@ public class SaatPeSaatServer {
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
                 sockets[index++] = listeningSocket.accept();
+                System.out.println("Number of players expected at " + listeningSocket.getLocalPort()
+                        + " is/are: " + (numberOfPlayers - index));
                 if (index == numberOfPlayers) {
                     break;
                 }

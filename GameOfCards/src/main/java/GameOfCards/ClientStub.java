@@ -24,7 +24,7 @@ public class ClientStub {
                 DumbClient game2 = new DumbClient(player);
                 game2.playGame();
             default:
-                System.err.println("Some error occured");
+                System.err.println("Some error occured" + client.getOption());
         }
     }
 
@@ -49,6 +49,10 @@ public class ClientStub {
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             try {
                 client.setOption(Integer.parseInt(input.readLine()));
+                System.out.println("Enter the number of players: ");
+                int a = Integer.parseInt(input.readLine());
+                System.out.println(a);
+                client.setNumberOfPlayers(a);
             } catch (IOException io) {
                 io.printStackTrace();
             }
@@ -67,17 +71,24 @@ public class ClientStub {
                 Socket soc = new Socket("localhost", 3000);
                 Comms.sendWelcome(client, new ObjectOutputStream(soc.getOutputStream()));
                 reply = Comms.receiveHello(new ObjectInputStream(soc.getInputStream()));
+                Thread.sleep(300);
+                System.out.println(11);
                 game = new Socket("localhost", 3000 + reply.getGroupId());
-                soc.close();
+                // soc.close();
+                System.out.println(22);
+                System.out.println("Connected to new Server at" + game.getLocalPort());
+                System.out.println("Your group ID = " + (game.getLocalPort() - 3000));
             } catch (IOException io) {
                 io.printStackTrace();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
             }
             return game;
         }
-        System.out.print("Enter your group ID: ");
+        System.out.println("Enter your group ID: ");
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         try {
-            game = new Socket("localhost", 3000 + Integer.parseInt(input.readLine()));
+            game = new Socket("localhost", 3000 + (Integer.parseInt(input.readLine())));
         } catch (IOException io) {
             io.printStackTrace();
         }

@@ -46,10 +46,13 @@ public class ServerStub extends Thread {
         switch (gameId) {
             case 1:
                 game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+                break;
             case 2:
                 game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+                break;
             default:
                 game = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), 1);
+                break;
         }
         game.run();
     }

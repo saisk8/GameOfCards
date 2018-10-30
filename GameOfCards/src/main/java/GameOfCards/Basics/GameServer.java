@@ -17,12 +17,18 @@ public class GameServer implements Runnable {
     public void run() {
         switch (gameId) {
             case 1:
+                System.out
+                        .println("Game ID: " + gameId + ", NUmber Of Players: " + numberOfPlayers);
                 SaatPeSaatServer game1 = new SaatPeSaatServer(portOffset, numberOfPlayers);
                 game1.init();
+                break;
 
             case 2:
+                System.out
+                        .println("Game ID: " + gameId + ", NUmber Of Players: " + numberOfPlayers);
                 DumbGameServer game2 = new DumbGameServer(portOffset, numberOfPlayers);
                 game2.init();
+                break;
             default:
                 System.err.println("Some error occured");
         }
