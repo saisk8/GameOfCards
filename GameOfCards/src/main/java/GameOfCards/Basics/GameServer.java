@@ -3,7 +3,7 @@ package GameOfCards.Basics;
 import GameOfCards.Game.SaatPeSaatGame.SaatPeSaatServer;
 import GameOfCards.Game.DumbGame.DumbGameServer;;
 
-public class GameServer implements Runnable {
+public class GameServer extends Thread {
     private int portOffset;
     private int numberOfPlayers;
     private int gameId;
@@ -18,14 +18,14 @@ public class GameServer implements Runnable {
         switch (gameId) {
             case 1:
                 System.out
-                        .println("Game ID: " + gameId + ", NUmber Of Players: " + numberOfPlayers);
+                        .println("Game ID: " + gameId + ", Number Of Players: " + numberOfPlayers);
                 SaatPeSaatServer game1 = new SaatPeSaatServer(portOffset, numberOfPlayers);
                 game1.init();
                 break;
 
             case 2:
                 System.out
-                        .println("Game ID: " + gameId + ", NUmber Of Players: " + numberOfPlayers);
+                        .println("Game ID: " + gameId + ", Number Of Players: " + numberOfPlayers);
                 DumbGameServer game2 = new DumbGameServer(portOffset, numberOfPlayers);
                 game2.init();
                 break;
