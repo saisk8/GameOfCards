@@ -83,6 +83,7 @@ public class Comms implements Serializable {
         try {
             outds[index].writeObject("You Win!\n\n");
             outds[index].close();
+            index = (index + 1) % NUMBER_OF_PLAYERS;
         } catch (IOException io) {
             io.printStackTrace();
         }
