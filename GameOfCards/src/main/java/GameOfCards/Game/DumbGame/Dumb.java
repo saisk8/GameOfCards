@@ -61,7 +61,8 @@ public class Dumb {
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             scores.add(playerHands[i].evaluateHand());
         }
-        Comms.declareWinner(outStream, Collections.max(scores), false, NUMBER_OF_PLAYERS);
+        Comms.declareWinner(outStream, scores.indexOf(Collections.max(scores)), false,
+                NUMBER_OF_PLAYERS);
         System.out.println("Game ended!");
     }
 
