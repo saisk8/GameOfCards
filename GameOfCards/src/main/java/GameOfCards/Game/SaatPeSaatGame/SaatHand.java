@@ -22,18 +22,17 @@ public class SaatHand extends Hand implements Serializable {
         return cardOnTop;
     }
 
-    public List<Integer> evaluateOptions() {
+    public List<Card> evaluateOptions() {
         Rank rankValue = cardOnTop.getRank();
         Suit suitValue = cardOnTop.getSuit();
-        List<Integer> possible = new ArrayList<Integer>();
+        List<Card> possible = new ArrayList<Card>();
         for (int i = 0; i < getNumberOfCards(); i++) {
             if (rankValue.getName().equals(getCard(i).getRank().getName())) {
-                possible.add(i + 1);
+                possible.add(getCard(i));
                 continue;
             } else if (suitValue.getName().equals(getCard(i).getSuit().getName())) {
-                if (rankValue.compareTo(getCard(i).getRank()) == -1
-                        || rankValue.compareTo(getCard(i).getRank()) == 1) {
-                    possible.add(i + 1);
+                if (rankValue.compareTo(getCard(i).getRank()) == -1 || rankValue.compareTo(getCard(i).getRank()) == 1) {
+                    possible.add(getCard(i));
                     continue;
                 }
             }

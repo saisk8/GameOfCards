@@ -17,17 +17,18 @@ public class SaatPeSaatServer {
     public void init() {
         ServerSocket listeningSocket;
         try {
-            System.out.println("Port: " + thePort + " Number of Players: " + numberOfPlayers);
+            // System.out.println("Port: " + thePort + " Number of Players: " +
+            // numberOfPlayers);
             int index = 0;
             Socket sockets[] = new Socket[numberOfPlayers];
             listeningSocket = new ServerSocket(thePort);
-            System.out.println("Accepting connections on port " + listeningSocket.getLocalPort()
-                    + " IP = " + listeningSocket.getInetAddress().toString());
+            System.out.println("Accepting connections on port " + listeningSocket.getLocalPort() + " IP = "
+                    + listeningSocket.getInetAddress().toString());
             while (true) {
-                System.out.println("Again1 " + listeningSocket.getLocalPort());
+                // System.out.println("Again1 " + listeningSocket.getLocalPort());
                 sockets[index++] = listeningSocket.accept();
-                System.out.println("Number of players expected at " + listeningSocket.getLocalPort()
-                        + " is/are: " + (numberOfPlayers - index));
+                System.out.println("Number of players expected at " + listeningSocket.getLocalPort() + " is/are: "
+                        + (numberOfPlayers - index));
                 if (index == numberOfPlayers) {
                     // System.out.println("Not breaking");
                     break;

@@ -13,20 +13,20 @@ public class SaatPeSaatClient {
     }
 
     public void playGame() {
-        System.out.println(1);
+        // System.out.println(1);
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         ObjectInputStream inStream = null;
         ObjectOutputStream outStream = null;
         try {
-            System.out.println(3);
+            // System.out.println(3);
             outStream = new ObjectOutputStream(player.getOutputStream());
             inStream = new ObjectInputStream(player.getInputStream());
         } catch (IOException io) {
             System.out.println("Error...");
         }
-        System.out.println(2);
+        // System.out.println(2);
         while (true) {
-            System.out.println("Wait for turn...");
+            System.out.println("Please wait for turn...\n\n");
             try {
                 response = (String) inStream.readObject();
                 System.out.println(response);
@@ -36,10 +36,10 @@ public class SaatPeSaatClient {
                 cnf.printStackTrace();
             }
             // System.out.println("Play");
-            if (response.endsWith("Select an option: ")) {
+            if (response.endsWith("(from 1 to n): ")) {
                 try {
                     action = Integer.parseInt(input.readLine()) - 1;
-                    System.out.println(action);
+                    // System.out.println(action);
                     outStream.writeObject(action);
                     Thread.sleep(1000);
                 } catch (IOException io) {

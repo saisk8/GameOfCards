@@ -23,10 +23,9 @@ public class ServerStub extends Thread {
             listeningSocket = new ServerSocket(PORT);
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
-                System.out.println("Again");
+                // System.out.println("Again");
                 Socket newClient = listeningSocket.accept();
-                Acquaintance guest =
-                        Comms.receiveHello(new ObjectInputStream(newClient.getInputStream()));
+                Acquaintance guest = Comms.receiveHello(new ObjectInputStream(newClient.getInputStream()));
                 Acquaintance welcome = greetings(guest);
                 int game = guest.getOption();
                 ServerStub stub = assignDealer(game, guest);
@@ -60,15 +59,15 @@ public class ServerStub extends Thread {
         GameServer newGame = null;
         System.out.println(numberOfGroups);
         switch (gameId) {
-            case 1:
-                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
-                break;
-            case 2:
-                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
-                break;
-            default:
-                newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), 1);
-                break;
+        case 1:
+            newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+            break;
+        case 2:
+            newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), gameId);
+            break;
+        default:
+            newGame = new GameServer(numberOfGroups, guest.getNumberOfPlayers(), 1);
+            break;
         }
         return new ServerStub(newGame);
     }

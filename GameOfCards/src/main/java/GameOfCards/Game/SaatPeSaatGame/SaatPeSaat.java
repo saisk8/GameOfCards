@@ -21,7 +21,7 @@ public class SaatPeSaat {
     }
 
     public void init() {
-        System.out.println("In Init");
+        // System.out.println("In Init");
         // add the Card instantiations here
         cardDeck = new Deck();
         Iterator<Suit> suitIterator = Suit.VALUES.iterator();
@@ -52,7 +52,7 @@ public class SaatPeSaat {
     }
 
     public void startGame() {
-        System.out.println("In start");
+        // System.out.println("In start");
         boolean NO_WINNER = true;
         int count = 0;
         int turn = (firstPlayer + 1) % NUMBER_OF_PLAYERS;
@@ -71,34 +71,34 @@ public class SaatPeSaat {
         while (NO_WINNER) {
             System.out.println(turn);
             count++;
-            String actionStr = "Your turn...\n" + "Your Hand: " + playerHands[turn] + "\n"
-                    + "Card on top: " + playerHands[turn].getCardOnTop() + "\n";
-            List<Integer> options = playerHands[turn].evaluateOptions();
+            String actionStr = "Your turn...\n\n" + "Cards currently in your hand: \n" + playerHands[turn] + "\n\n"
+                    + "Last played card: " + playerHands[turn].getCardOnTop() + "\n\n";
+            List<Card> options = playerHands[turn].evaluateOptions();
             if (options.size() == 0) {
                 actionStr += ("No possible plays...");
             } else {
-                actionStr += "Possible plays: " + options.toString() + "\n";
-                actionStr += "Select an option: ";
+                actionStr += "You can play the following cards from your hand:\n " + options + "\n";
+                actionStr += "Please enter the index from the list of possible plays(from 1 to n): ";
             }
             Comms.sendData(outStream[turn], actionStr);
             action = (Integer) Comms.receiveData(inStream[turn]);
             int next = (turn + 1) % NUMBER_OF_PLAYERS;
             if (action == -1) {
-                System.out.println("Here1");
+                // System.out.println("Here1");
                 playerHands[next].setCardOnTop(playerHands[turn].getCardOnTop());
                 turn = next;
                 if (count > 3 && checkLoop()) {
-                    System.out.println("Infinite loop");
+                    // System.out.println("Infinite loop");
                     NO_WINNER = false;
                 }
                 continue;
             } else if (action <= -2) {
-                System.out.println("An unknown error occured...");
+                System.err.println("An unknown error occured...");
                 return;
             }
             NO_WINNER = !playerHands[turn].isEmpty();
             if (NO_WINNER) {
-                System.out.println(turn + " " + next + " " + action);
+                // System.out.println(turn + " " + next + " " + action);
                 playerHands[next].setCardOnTop(playerHands[turn].removeCard(action));
             }
             turn = next;
@@ -107,7 +107,6 @@ public class SaatPeSaat {
         Comms.declareWinner(outStream, turn, checkLoop(), NUMBER_OF_PLAYERS);
         System.out.println("Game ended!");
     }
-
 
     public boolean checkLoop() {
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {

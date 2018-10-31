@@ -23,13 +23,15 @@ public class DumbGameServer {
             System.out.println("Accepting connections on port " + listeningSocket.getLocalPort());
             while (true) {
                 sockets[index++] = listeningSocket.accept();
+                System.out.println("Number of players expected at " + listeningSocket.getLocalPort() + " is/are: "
+                        + (numberOfPlayers - index));
                 if (index == numberOfPlayers) {
                     break;
                 }
             }
-            Dumb sps = new Dumb(sockets, numberOfPlayers);
-            sps.init();
-            sps.startGame();
+            Dumb dumb = new Dumb(sockets, numberOfPlayers);
+            dumb.init();
+            dumb.startGame();
         } catch (IOException e) {
             System.err.println("Server aborted prematurely " + thePort);
         }

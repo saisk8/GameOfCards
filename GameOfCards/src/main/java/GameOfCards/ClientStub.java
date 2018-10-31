@@ -23,15 +23,16 @@ public class ClientStub {
                 soc = new Socket("localhost", 3000);
                 Comms.sendWelcome(client, new ObjectOutputStream(soc.getOutputStream()));
                 reply = Comms.receiveHello(new ObjectInputStream(soc.getInputStream()));
-                System.out.println(reply.getGroupId());
+                // System.out.println(reply.getGroupId());
                 try {
-                    System.out.println(11);
+                    // System.out.println(11);
                     int port = 3000 + reply.getGroupId();
                     System.out.println("Port: " + port);
                     player = new Socket("localhost", port);
-                    System.out.println(22);
-                    System.out.println("Connected to new Server at" + player.getPort());
+                    // System.out.println(22);
+                    System.out.println("Connected to new Server at " + player.getPort());
                     System.out.println("Your group ID = " + (player.getPort() - 3000));
+                    System.out.println("Wait until other players join... Thank you!");
                 } catch (IOException io) {
                     io.printStackTrace();
                 }
@@ -49,6 +50,7 @@ public class ClientStub {
                 System.out.println("Port: " + port);
                 player = new Socket("localhost", port);
                 System.out.println("Connected to new Server at" + player.getPort());
+                System.out.println("Wait until other players join... Thank you!");
             } catch (IOException io) {
                 io.printStackTrace();
             }
@@ -71,11 +73,13 @@ public class ClientStub {
         int option = -1;
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Are you a Host(1) or not(2): ");
-        try {
-            option = Integer.parseInt(input.readLine());
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
+        do {
+            try {
+                option = Integer.parseInt(input.readLine());
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+        } while (option != 1 && option != 2);
         return option;
     }
 
@@ -91,7 +95,7 @@ public class ClientStub {
                 client.setOption(a);
                 System.out.println("Enter the number of players: ");
                 int b = Integer.parseInt(input.readLine());
-                System.out.println(b);
+                // System.out.println(b);
                 client.setNumberOfPlayers(b);
             } catch (IOException io) {
                 io.printStackTrace();

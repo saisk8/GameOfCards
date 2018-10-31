@@ -1,7 +1,6 @@
 GameOfCards/Basics/Hand.class
 GameOfCards/Basics/Suit.class
 GameOfCards/Game/SaatPeSaatGame/SaatHand.class
-GameOfCards/App.class
 GameOfCards/Basics/Comms.class
 GameOfCards/ClientStub.class
 GameOfCards/Basics/GameServer.class
