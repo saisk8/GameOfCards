@@ -5,10 +5,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Class that implements the communication library of the application.
+ */
 public class Comms implements Serializable {
     private final static long serialVersionUID = 1;
 
-
+    /**
+     * To send the welocme object to a new client host
+     * 
+     * @param data data to be sent
+     * @param out  ObjectOutputStream of the object
+     */
     public static void sendWelcome(Object data, ObjectOutputStream out) {
         try {
             out.writeObject(data);
@@ -17,6 +25,12 @@ public class Comms implements Serializable {
         }
     }
 
+    /**
+     * To receive the Hello Object
+     * 
+     * @param in The ObjectInputStream
+     * @return Return the object of type Acquaintance
+     */
     public static Acquaintance receiveHello(ObjectInputStream in) {
         try {
             return (Acquaintance) in.readObject();

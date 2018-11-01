@@ -3,15 +3,26 @@ package GameOfCards.Game.SaatPeSaatGame;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * A class that implements the Saat Pe Saat client
+ */
 public class SaatPeSaatClient {
     Socket player;
     String response;
     int action;
 
+    /**
+     * The constructor of the class
+     * 
+     * @param player The socket object that is connected to the dedicated server
+     */
     public SaatPeSaatClient(Socket player) {
         this.player = player;
     }
 
+    /**
+     * The method that allows the user to play the game
+     */
     public void playGame() {
         // System.out.println(1);
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));

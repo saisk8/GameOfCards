@@ -6,6 +6,9 @@ import GameOfCards.Basics.*;
 import java.io.*;
 import java.util.List;
 
+/**
+ * A class that implements the Saat pe Saat game's rules
+ */
 public class SaatPeSaat {
     private Deck cardDeck;
     private SaatHand[] playerHands;
@@ -15,11 +18,20 @@ public class SaatPeSaat {
     private int firstPlayer = -1;
     private final Card hearts7 = new Card(Suit.HEARTS, Rank.SEVEN);
 
+    /**
+     * The constructor of Saat pe Saat game
+     * 
+     * @param players           The array of Sockets of the players playing the game
+     * @param NUMBER_OF_PLAYERS The number of players in the game
+     */
     public SaatPeSaat(Socket[] players, int NUMBER_OF_PLAYERS) {
         this.players = players;
         this.NUMBER_OF_PLAYERS = NUMBER_OF_PLAYERS;
     }
 
+    /**
+     * A method to intialise the game
+     */
     public void init() {
         // System.out.println("In Init");
         // add the Card instantiations here
@@ -51,6 +63,9 @@ public class SaatPeSaat {
         }
     }
 
+    /**
+     * The method to start the game
+     */
     public void startGame() {
         // System.out.println("In start");
         boolean NO_WINNER = true;
@@ -71,14 +86,16 @@ public class SaatPeSaat {
         while (NO_WINNER) {
             System.out.println(turn);
             count++;
-            String actionStr = "Your turn...\n\n" + "Cards currently in your hand: \n" + playerHands[turn] + "\n\n"
-                    + "Last played card: " + playerHands[turn].getCardOnTop() + "\n\n";
+            String actionStr = "Your turn...\n\n" + "Cards currently in your hand: \n"
+                    + playerHands[turn] + "\n\n" + "Last played card: "
+                    + playerHands[turn].getCardOnTop() + "\n\n";
             List<Card> options = playerHands[turn].evaluateOptions();
             if (options.size() == 0) {
                 actionStr += ("No possible plays...");
             } else {
                 actionStr += "You can play the following cards from your hand:\n " + options + "\n";
-                actionStr += "Please enter the index from the list of possible plays(from 1 to n): ";
+                actionStr +=
+                        "Please enter the index from the list of possible plays(from 1 to n): ";
             }
             Comms.sendData(outStream[turn], actionStr);
             action = (Integer) Comms.receiveData(inStream[turn]);
@@ -108,6 +125,11 @@ public class SaatPeSaat {
         System.out.println("Game ended!");
     }
 
+    /**
+     * A function to check if, no one can win the game anymore
+     * 
+     * @return A boolean value, true if no one can win or otherwise false
+     */
     public boolean checkLoop() {
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             if (!playerHands[i].evaluateOptions().isEmpty()) {

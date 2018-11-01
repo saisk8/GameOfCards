@@ -3,7 +3,7 @@ package GameOfCards.Game.DumbGame;
 import GameOfCards.Basics.*;
 
 /**
- * Implementation of the rules for the dumb card game.
+ * Implementation of the Hand of a player in the Dumb game
  */
 public class DumbGameHand extends Hand {
     private final static long serialVersionUID = 1;

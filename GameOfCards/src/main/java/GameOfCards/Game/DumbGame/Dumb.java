@@ -8,17 +8,29 @@ import GameOfCards.Basics.*;
 import java.io.*;
 import java.util.List;
 
+/**
+ * The class that implements the Dumn game rules
+ */
 public class Dumb {
     private Deck cardDeck;
     private DumbGameHand[] playerHands;
     private final int NUMBER_OF_PLAYERS;
     private Socket[] players;
 
+    /**
+     * Creates a new Dealer for the dumb game
+     * 
+     * @param players
+     * @param NUMBER_OF_PLAYERS
+     */
     public Dumb(Socket[] players, int NUMBER_OF_PLAYERS) {
         this.players = players;
         this.NUMBER_OF_PLAYERS = NUMBER_OF_PLAYERS;
     }
 
+    /**
+     * The method to initialise the game
+     */
     public void init() {
         // add the Card instantiations here
         cardDeck = new Deck();
@@ -46,12 +58,13 @@ public class Dumb {
         }
     }
 
+    /**
+     * The method that runs the game.
+     */
     public void startGame() {
-        DataInputStream[] inStream = new DataInputStream[NUMBER_OF_PLAYERS];
         ObjectOutputStream[] outStream = new ObjectOutputStream[NUMBER_OF_PLAYERS];
         try {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-                inStream[i] = new DataInputStream(players[i].getInputStream());
                 outStream[i] = new ObjectOutputStream(players[i].getOutputStream());
             }
         } catch (IOException io) {
@@ -60,6 +73,8 @@ public class Dumb {
         List<Integer> scores = new ArrayList<Integer>();
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             scores.add(playerHands[i].evaluateHand());
+            String socreStr = "Your score is: " + scores.get(i);
+            Comms.sendData(outStream[i], socreStr);
         }
         Comms.declareWinner(outStream, scores.indexOf(Collections.max(scores)), false,
                 NUMBER_OF_PLAYERS);

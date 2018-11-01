@@ -11,6 +11,9 @@ import GameOfCards.Basics.Comms;
 import GameOfCards.Game.DumbGame.DumbClient;
 import GameOfCards.Game.SaatPeSaatGame.*;
 
+/**
+ * The class that implements all the client dealings with the application
+ */
 public class ClientStub {
     public static void main(String argv[]) throws Exception {
         int host = isHost();
@@ -69,6 +72,11 @@ public class ClientStub {
         }
     }
 
+    /**
+     * A function to check if current user wants to be a host
+     * 
+     * @return A boolean value confirming the host status
+     */
     public static int isHost() {
         int option = -1;
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -83,6 +91,13 @@ public class ClientStub {
         return option;
     }
 
+    /**
+     * A class that fills in the general information required by the applicatioon to start or find
+     * the game
+     * 
+     * @param isHost If the player is the host; A boolean value
+     * @return An Acquaintance object with all the required information that is sent to the server
+     */
     public static Acquaintance doNeedFull(int isHost) {
         Acquaintance client = new Acquaintance();
         if (isHost == 1) {
