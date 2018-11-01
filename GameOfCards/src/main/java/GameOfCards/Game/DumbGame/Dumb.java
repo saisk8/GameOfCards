@@ -73,8 +73,8 @@ public class Dumb {
         List<Integer> scores = new ArrayList<Integer>();
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             scores.add(playerHands[i].evaluateHand());
-            String socreStr = "Your score is: " + scores.get(i);
-            Comms.sendData(outStream[i], socreStr);
+            String scoreStr = "Your score is: " + scores.get(i);
+            Comms.sendData(outStream[i], scoreStr);
         }
         Comms.declareWinner(outStream, scores.indexOf(Collections.max(scores)), false,
                 NUMBER_OF_PLAYERS);

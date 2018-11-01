@@ -35,6 +35,8 @@ public class DumbClient {
         try {
             response = (String) inStream.readObject();
             System.out.println(response);
+            response = (String) inStream.readObject();
+            System.out.println(response);
         } catch (IOException io) {
             io.printStackTrace();
         } catch (ClassNotFoundException cnf) {
