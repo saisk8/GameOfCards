@@ -52,7 +52,7 @@ public class ClientStub {
                 int port = 3000 + Integer.parseInt(input.readLine());
                 System.out.println("Port: " + port);
                 player = new Socket("localhost", port);
-                System.out.println("Connected to new Server at" + player.getPort());
+                System.out.println("Connected to new Server at " + player.getPort());
                 System.out.println("Wait until other players join... Thank you!");
             } catch (IOException io) {
                 io.printStackTrace();
